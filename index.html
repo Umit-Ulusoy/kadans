@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kadans - Erişilebilir Metronom ve Ses Kaydedici</title>
+<meta name="title" content="Kadans - Erişilebilir Metronom ve Ses Kaydedici">
+<meta name="description" content="Müzisyenler için geliştirilmiş ekran okuyucu uyumlu metronomlu ses kayıt uygulaması.">
+<meta name="keywords" content="kadans, erişilebilir metronom, ekran okuyucu metronom, voiceover metronom, talkback ses kaydedici, web audio metronom">
+<meta name="author" content="Kadans">
+
+<meta property="og:type" content="website">
+<meta property="og:url" content="iste-URL'si">
+<meta property="og:title" content="Kadans - Erişilebilir Metronom ve Ses Kaydedici">
+<meta property="og:description" content="Müzisyenler için geliştirilmiş ekran okuyucu uyumlu metronomlu ses kayıt uygulaması.">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="site-URL'si">
+<meta name="twitter:title" content="Kadans - Erişilebilir Metronom ve Ses Kaydedici">
+<meta name="twitter:description" content="Müzisyenler için geliştirilmiş ekran okuyucu uyumlu metronomlu ses kayıt uygulaması.">
+<meta name="twitter:image" content="site-URL'si/og-image.png">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <a href="#main-content" class="sr-only sr-only-focusable">Ana İçeriğe Atla</a>
+
+    <header>
+        <h1>Erişilebilir Ses Kayıt ve Metronom Uygulaması</h1>
+    </header>
+
+    <div id="statusRegion" class="sr-only" aria-live="polite" aria-atomic="true" role="status"></div>
+
+    <main id="main-content">
+        
+        <section aria-label="Metronom Ayarları" class="app-section">
+            <h2>Metronom Ayarları</h2>
+            
+            <div class="form-group">
+                <label for="bpm">Tempo (BPM - Dakikadaki Vuruş Sayısı):</label>
+                <input 
+                    type="number" 
+                    id="bpm" 
+                    min="40" 
+                    max="240" 
+                    value="80" 
+                    aria-describedby="bpmHelp"
+                >
+                <span id="bpmHelp" class="help-text">40 ile 240 arasında bir değer giriniz.</span>
+            </div>
+
+            <div class="form-group checkbox-group">
+                <input type="checkbox" id="chkCountIn">
+                <label for="chkCountIn">Kayda başlamadan önce 4 tık sayım yap</label>
+            </div>
+
+            <div class="button-group">
+                <button id="btnMetronome" type="button" aria-pressed="false">
+                    Metronomu Başlat
+                </button>
+            </div>
+        </section>
+
+        <section aria-label="Ses Kayıt Kontrolleri" class="app-section">
+            <h2>Ses Kaydedici</h2>
+
+            <div class="button-group">
+                <button id="btnRecord" type="button">Kaydı Başlat</button>
+                <button id="btnStop" type="button" disabled>Kaydı Bitir</button>
+            </div>
+
+            <div class="form-group">
+                <label for="audioPreview" id="audioPreviewLabel">Kayıt Önizleme:</label>
+                <audio id="audioPreview" controls aria-labelledby="audioPreviewLabel" tabindex="0"></audio>
+            </div>
+        </section>
+
+        <section aria-label="Paylaşım ve Gönderim" class="app-section">
+            <h2>Kaydı Paylaş ve Gönder</h2>
+
+            <div class="button-group">
+                <button id="btnShare" type="button" disabled>Dosyayı Paylaş</button>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
