@@ -1,0 +1,156 @@
+/* Base Typography and Layout */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #ffffff;
+    color: #111111;
+    margin: 0;
+    padding: 1rem;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+h1 {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #111111;
+    padding-bottom: 0.5rem;
+}
+
+h2 {
+    font-size: 1.4rem;
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+
+.app-section {
+    border: 2px solid #333333;
+    border-radius: 8px;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+    background-color: #f9f9f9;
+}
+
+.form-group {
+    margin-bottom: 1.25rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.checkbox-group {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+label {
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-bottom: 0.4rem;
+}
+
+.checkbox-group label {
+    margin-bottom: 0;
+    font-weight: normal;
+}
+
+.help-text {
+    font-size: 0.9rem;
+    color: #444444;
+    margin-top: 0.2rem;
+}
+
+/* High-Contrast Form Controls */
+input[type="number"] {
+    font-size: 1.2rem;
+    padding: 0.6rem;
+    border: 2px solid #333333;
+    border-radius: 4px;
+    width: 100%;
+    max-width: 200px;
+    background-color: #ffffff;
+    color: #000000;
+}
+
+input[type="checkbox"] {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+}
+
+/* High Touch Target Buttons (Minimum 48x48px) */
+.button-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+button {
+    font-size: 1.1rem;
+    font-weight: bold;
+    padding: 0.8rem 1.5rem;
+    min-height: 48px;
+    min-width: 48px;
+    background-color: #004499;
+    color: #ffffff;
+    border: 2px solid #002255;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+button:hover:not(:disabled) {
+    background-color: #002255;
+}
+
+button:disabled {
+    background-color: #767676;
+    border-color: #555555;
+    color: #ffffff;
+    cursor: not-allowed;
+    opacity: 0.8;
+}
+
+/* Distinct High-Contrast Focus Outline */
+button:focus-visible,
+input:focus-visible,
+audio:focus-visible,
+a:focus-visible {
+    outline: 4px solid #d9381e !important;
+    outline-offset: 3px !important;
+}
+
+audio {
+    width: 100%;
+    margin-top: 0.5rem;
+}
+
+/* Visually Hidden Class for Screen Readers Only */
+.sr-only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+.sr-only-focusable:focus {
+    position: static !important;
+    width: auto !important;
+    height: auto !important;
+    clip: auto !important;
+    white-space: normal !important;
+    background-color: #ffff00;
+    color: #000000;
+    padding: 0.5rem;
+    font-weight: bold;
+}
