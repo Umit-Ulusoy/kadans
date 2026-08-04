@@ -235,3 +235,21 @@ btnShare.addEventListener('click', async () => {
         announceStatus('Cihazınız dosya paylaşımını desteklemiyor.');
     }
 });
+
+const registerServiceWorker = async () => {
+  if ('serviceWorker' in navigator) {
+    try {
+      const registration = await navigator.serviceWorker.register('/sw.js');
+      console.log('Service Worker başarıyla kaydoldu:', registration.scope);
+    } catch (error) {
+      console.error('Service Worker kaydı başarısız:', error);
+    }
+  }
+};
+
+// Sayfa zaten yüklendiyse direkt çalıştır, yüklenmediyse 'load' olayını bekle
+if (document.readyState === 'complete') {
+  registerServiceWorker();
+} else {
+  window.addEventListener('load', registerServiceWorker);
+}
