@@ -15,14 +15,26 @@ let timerID = null;
 
 let mediaRecorder = null;
 let audioChunks = [];
-let recordedAudioBlob = null;
-let recordedAudioUrl = null;
+
+const recordedAudios = [];
 
 function announceStatus(message) {
     statusRegion.textContent = '';
     setTimeout(() => {
         statusRegion.textContent = message;
     }, 50);
+}
+
+/**
+ * Random ID generator for modular structure
+ */
+function createRandomId(length = 8) {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
 }
 
 /**
@@ -125,7 +137,6 @@ function runCountIn() {
         
         const bpm = Math.max(40, Math.min(240, Number(bpmInput.value) || 80));
         const secondsPerBeat = 60.0 / bpm;
-        let count = 0;
         let startTime = audioCtx.currentTime + 0.1;
 
         for (let i = 0; i < 4; i++) {
@@ -141,14 +152,14 @@ function runCountIn() {
 async function startRecordingProcess() {
     try {
         const stream = await navigator.mediaDevices.getUserMedia({
-    audio: {
-        echoCancellation: false,
-        noiseSuppression: false,
-        autoGainControl: false,
-        channelCount: 1,
-        latency: 0
-    }
-});
+            audio: {
+                echoCancellation: false,
+                noiseSuppression: false,
+                autoGainControl: false,
+                channelCount: 1,
+                latency: 0
+            }
+        });
         
         if (chkCountIn.checked) {
             await runCountIn();
@@ -164,14 +175,25 @@ async function startRecordingProcess() {
         };
 
         mediaRecorder.onstop = () => {
-            recordedAudioBlob = new Blob(audioChunks, { type: 'audio/ogg' });
-            recordedAudioUrl = URL.createObjectURL(recordedAudioBlob);
+            const audioId = createRandomId(8);
+            const audioBlob = new Blob(audioChunks, { type: 'audio/ogg' });
+            const audioUrl = URL.createObjectURL(audioBlob);
+
+            const newRecord = {
+                id: audioId,
+                name: `Kayıt ${recordedAudios.length + 1}`,
+                blob: audioBlob,
+                url: audioUrl,
+                duration: '0:00'
+            };
+
+            recordedAudios.push(newRecord);
             
-            audioPreview.src = recordedAudioUrl;
+            renderAudioList();
             
-            btnShare.disabled = !navigator.canShare;
+            btnShare.disabled = false;
             
-            announceStatus('Kayıt tamamlandı. Ses önizleme alanından dinleyebilirsiniz.');
+            announceStatus('Kayıt tamamlandı ve listeye eklendi.');
             
             stream.getTracks().forEach(track => track.stop());
         };
@@ -206,22 +228,16 @@ function stopRecordingProcess() {
 btnRecord.addEventListener('click', startRecordingProcess);
 btnStop.addEventListener('click', stopRecordingProcess);
 
-/* ==========================================================================
-   WEB SHARE API (MOBILE SHARING)
-   ========================================================================== */
-
-btnShare.addEventListener('click', async () => {
-    if (!recordedAudioBlob) {
-        announceStatus('Paylaşılacak dosya bulunamadı.');
-        return;
-    }
-
-    const file = new File([recordedAudioBlob], 'ses-kaydi.ogg', { type: 'audio/ogg' });
+/**
+ * Common shared audio function for Web Share API
+ */
+async function shareAudioRecord(blob, title, fileName) {
+    const file = new File([blob], fileName, { type: 'audio/ogg' });
 
     if (navigator.canShare && navigator.canShare({ files: [file] })) {
         try {
             await navigator.share({
-                title: 'Ses Kaydı',
+                title: title,
                 text: 'Metronom eşliğinde alınan ses kaydı.',
                 files: [file]
             });
@@ -234,7 +250,122 @@ btnShare.addEventListener('click', async () => {
     } else {
         announceStatus('Cihazınız dosya paylaşımını desteklemiyor.');
     }
-});
+}
+
+/* ==========================================================================
+   MULTI-AUDIO LIST & UI MANAGEMENT
+   ========================================================================== */
+
+/**
+ * Updates and renders the audio list in the UI
+ */
+function renderAudioList() {
+    const listContainer = document.getElementById('audioListContainer');
+    if (!listContainer) return;
+
+    listContainer.innerHTML = '';
+
+    if (recordedAudios.length === 0) {
+        listContainer.innerHTML = '<p>Kayıt yok</p>';
+        return;
+    }
+
+    recordedAudios.forEach((record, index) => {
+        const itemElement = document.createElement('div');
+        itemElement.className = 'audio-item-block';
+        itemElement.setAttribute('role', 'group');
+        itemElement.setAttribute('aria-label', `Kayıt ${index + 1}: ${record.name}`);
+
+        itemElement.innerHTML = `
+            <div class="audio-info-row">
+                <span class="audio-index">#${index + 1}</span> - 
+                <span class="audio-name"><strong>${record.name}</strong></span> 
+                (<span class="audio-duration">${record.duration || '0:00'}</span>)
+            </div>
+            <audio class="audio-player-element" src="${record.url}" style="display:none;"></audio>
+            <div class="audio-controls-row button-group">
+                <button type="button" class="btn-toggle-play" aria-pressed="false" aria-label="${record.name} Oynat">Oynat</button>
+                <button type="button" class="btn-share-item" aria-label="${record.name} Paylaş">Paylaş</button>
+                <button type="button" class="btn-delete" aria-label="${record.name} Sil">Sil</button>
+            </div>
+        `;
+
+        const audioElement = itemElement.querySelector('.audio-player-element');
+        const btnTogglePlay = itemElement.querySelector('.btn-toggle-play');
+        const btnShareItem = itemElement.querySelector('.btn-share-item');
+        const btnDelete = itemElement.querySelector('.btn-delete');
+
+        // Update duration when audio metadata is loaded
+        audioElement.addEventListener('loadedmetadata', () => {
+            const minutes = Math.floor(audioElement.duration / 60);
+            const seconds = Math.floor(audioElement.duration % 60).toString().padStart(2, '0');
+            record.duration = `${minutes}:${seconds}`;
+            const durationSpan = itemElement.querySelector('.audio-duration');
+            if (durationSpan) durationSpan.textContent = record.duration;
+        });
+
+        // Toggle play/pause button
+        btnTogglePlay.addEventListener('click', () => {
+            if (audioElement.paused) {
+                audioElement.play();
+                btnTogglePlay.textContent = 'Durdur';
+                btnTogglePlay.setAttribute('aria-pressed', 'true');
+                btnTogglePlay.setAttribute('aria-label', `${record.name} Durdur`);
+                announceStatus(`${record.name} oynatılıyor.`);
+            } else {
+                audioElement.pause();
+                audioElement.currentTime = 0;
+                btnTogglePlay.textContent = 'Oynat';
+                btnTogglePlay.setAttribute('aria-pressed', 'false');
+                btnTogglePlay.setAttribute('aria-label', `${record.name} Oynat`);
+                announceStatus(`${record.name} durduruldu.`);
+            }
+        });
+
+        audioElement.addEventListener('ended', () => {
+            btnTogglePlay.textContent = 'Oynat';
+            btnTogglePlay.setAttribute('aria-pressed', 'false');
+            btnTogglePlay.setAttribute('aria-label', `${record.name} Oynat`);
+        });
+
+        // Share item button
+        btnShareItem.addEventListener('click', () => {
+            shareAudioRecord(record.blob, record.name, `${record.name}.ogg`);
+        });
+
+        // Delete item button
+        btnDelete.addEventListener('click', () => {
+            audioElement.pause();
+            const itemIndex = recordedAudios.findIndex(r => r.id === record.id);
+            if (itemIndex > -1) {
+                recordedAudios.splice(itemIndex, 1);
+                URL.revokeObjectURL(record.url);
+                renderAudioList();
+                if (recordedAudios.length === 0) {
+                    btnShare.disabled = true;
+                }
+                announceStatus(`${record.name} silindi.`);
+            }
+        });
+
+        listContainer.appendChild(itemElement);
+    });
+}
+
+/* ==========================================================================
+   WEB SHARE API (MOBILE SHARING - GENERAL)
+   ========================================================================== */
+
+if (btnShare) {
+    btnShare.addEventListener('click', () => {
+        if (recordedAudios.length === 0) {
+            announceStatus('Paylaşılacak kayıt bulunamadı.');
+            return;
+        }
+        const lastRecord = recordedAudios[recordedAudios.length - 1];
+        shareAudioRecord(lastRecord.blob, lastRecord.name, 'ses-kaydi.ogg');
+    });
+}
 
 const registerServiceWorker = async () => {
   if ('serviceWorker' in navigator) {
@@ -247,7 +378,6 @@ const registerServiceWorker = async () => {
   }
 };
 
-// Sayfa zaten yüklendiyse direkt çalıştır, yüklenmediyse 'load' olayını bekle
 if (document.readyState === 'complete') {
   registerServiceWorker();
 } else {

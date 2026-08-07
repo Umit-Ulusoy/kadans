@@ -73,10 +73,12 @@
                 <button id="btnRecord" type="button">Kaydı Başlat</button>
                 <button id="btnStop" type="button" disabled>Kaydı Bitir</button>
             </div>
+        </section>
 
-            <div class="form-group">
-                <label for="audioPreview" id="audioPreviewLabel">Kayıt Önizleme:</label>
-                <audio id="audioPreview" controls aria-labelledby="audioPreviewLabel" tabindex="0"></audio>
+        <section aria-label="Kayıt Listesi" class="app-section">
+            <h2>Kayıtlar</h2>
+            <div id="audioListContainer" role="region" aria-label="Kayıtlar Listesi" class="audio-list-wrapper">
+                <p>Kayıt yok</p>
             </div>
         </section>
 
