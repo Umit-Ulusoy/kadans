@@ -6,6 +6,8 @@ const btnRecord = document.getElementById('btnRecord');
 const btnStop = document.getElementById('btnStop');
 const btnShare = document.getElementById('btnShare');
 const audioPreview = document.getElementById('audioPreview');
+const shortcutsModal = document.getElementById('shortcutsModal');
+const btnCloseModal = document.getElementById('btnCloseModal');
 
 let audioCtx = null;
 let isMetronomeRunning = false;
@@ -383,3 +385,130 @@ if (document.readyState === 'complete') {
 } else {
   window.addEventListener('load', registerServiceWorker);
 }
+
+
+/* ==========================================================================
+   KEYBOARD SHORTCUTS
+   ========================================================================== */
+
+/**
+ * Updates BPM value within valid range
+ * @param {number} delta - Amount to change BPM by
+ */
+function changeBPM(delta) {
+    const currentBPM = Number(bpmInput.value) || 80;
+    const newBPM = Math.max(40, Math.min(240, currentBPM + delta));
+    bpmInput.value = newBPM;
+    announceStatus(`BPM ${newBPM} olarak değiştirildi.`);
+}
+
+/**
+ * Opens the keyboard shortcuts modal
+ */
+function openShortcutsModal() {
+    shortcutsModal.hidden = false;
+    btnCloseModal.focus();
+    announceStatus('Klavye kısayolları penceresi açıldı.');
+}
+
+/**
+ * Closes the keyboard shortcuts modal
+ */
+function closeShortcutsModal() {
+    shortcutsModal.hidden = true;
+    announceStatus('Klavye kısayolları penceresi kapatıldı.');
+}
+
+/**
+ * Handles global keyboard shortcuts
+ * @param {KeyboardEvent} event - Keyboard event object
+ */
+function handleKeyboardShortcuts(event) {
+    const target = event.target;
+    const isInputField = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA';
+
+    // Shift + ? - Toggle shortcuts modal
+    if (event.shiftKey && event.key === '?') {
+        event.preventDefault();
+        if (shortcutsModal.hidden) {
+            openShortcutsModal();
+        } else {
+            closeShortcutsModal();
+        }
+        return;
+    }
+
+    // Don't trigger shortcuts when typing in input fields
+    if (isInputField && target.id !== 'bpm') {
+        return;
+    }
+
+    switch (event.key.toLowerCase()) {
+        case ' ':
+            // Space - Toggle metronome
+            event.preventDefault();
+            btnMetronome.click();
+            break;
+
+        case 'r':
+            // R - Start recording
+            if (!btnRecord.disabled) {
+                event.preventDefault();
+                btnRecord.click();
+            }
+            break;
+
+        case 's':
+            // S - Stop recording
+            if (!btnStop.disabled) {
+                event.preventDefault();
+                btnStop.click();
+            }
+            break;
+
+        case 'arrowup':
+            // Arrow Up - Increase BPM by 1
+            event.preventDefault();
+            changeBPM(1);
+            break;
+
+        case 'arrowdown':
+            // Arrow Down - Decrease BPM by 1
+            event.preventDefault();
+            changeBPM(-1);
+            break;
+
+        case 'arrowright':
+            // Arrow Right - Increase BPM by 2
+            event.preventDefault();
+            changeBPM(2);
+            break;
+
+        case 'arrowleft':
+            // Arrow Left - Decrease BPM by 2
+            event.preventDefault();
+            changeBPM(-2);
+            break;
+
+        case 'escape':
+            // Escape - Close modal
+            if (!shortcutsModal.hidden) {
+                event.preventDefault();
+                closeShortcutsModal();
+            }
+            break;
+    }
+}
+
+// Attach keyboard event listener
+document.addEventListener('keydown', handleKeyboardShortcuts);
+
+// Close modal on button click
+btnCloseModal.addEventListener('click', closeShortcutsModal);
+
+// Close modal on outside click
+shortcutsModal.addEventListener('click', (event) => {
+    if (event.target === shortcutsModal) {
+        closeShortcutsModal();
+    }
+});

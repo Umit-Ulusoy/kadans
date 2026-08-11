@@ -92,6 +92,52 @@
 
     </main>
 
+    <!-- Keyboard Shortcuts Modal -->
+    <div id="shortcutsModal" class="modal" role="dialog" aria-labelledby="shortcutsModalTitle" aria-modal="true" hidden>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="shortcutsModalTitle">Klavye Kısayolları</h2>
+                <button id="btnCloseModal" type="button" class="btn-close" aria-label="Kapat">×</button>
+            </div>
+            <div class="modal-body">
+                <ul class="shortcuts-list">
+                    <li>
+                        <kbd>Space</kbd>
+                        <span>Metronom başlat/durdur</span>
+                    </li>
+                    <li>
+                        <kbd>R</kbd>
+                        <span>Kayıt başlat</span>
+                    </li>
+                    <li>
+                        <kbd>S</kbd>
+                        <span>Kayıt durdur</span>
+                    </li>
+                    <li>
+                        <kbd>↑</kbd>
+                        <span>BPM 1 artır</span>
+                    </li>
+                    <li>
+                        <kbd>↓</kbd>
+                        <span>BPM 1 azalt</span>
+                    </li>
+                    <li>
+                        <kbd>→</kbd>
+                        <span>BPM 2 artır</span>
+                    </li>
+                    <li>
+                        <kbd>←</kbd>
+                        <span>BPM 2 azalt</span>
+                    </li>
+                    <li>
+                        <kbd>Shift</kbd> + <kbd>?</kbd>
+                        <span>Bu pencereyi aç/kapat</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
     <script src="app.js"></script>
 </body>
 </html>

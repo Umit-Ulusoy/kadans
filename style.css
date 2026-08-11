@@ -154,3 +154,110 @@ audio {
     padding: 0.5rem;
     font-weight: bold;
 }
+
+/* Keyboard Shortcuts Modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.75);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal[hidden] {
+    display: none;
+}
+
+.modal-content {
+    background-color: #ffffff;
+    border: 3px solid #111111;
+    border-radius: 8px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem;
+    border-bottom: 2px solid #333333;
+    background-color: #f9f9f9;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.btn-close {
+    font-size: 2rem;
+    line-height: 1;
+    padding: 0.25rem 0.75rem;
+    background-color: transparent;
+    color: #111111;
+    border: 2px solid #111111;
+    min-height: 48px;
+    min-width: 48px;
+    cursor: pointer;
+}
+
+.btn-close:hover {
+    background-color: #d9381e;
+    color: #ffffff;
+    border-color: #d9381e;
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.shortcuts-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.shortcuts-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    border: 2px solid #333333;
+    border-radius: 6px;
+    background-color: #f9f9f9;
+}
+
+.shortcuts-list li:last-child {
+    margin-bottom: 0;
+}
+
+kbd {
+    display: inline-block;
+    padding: 0.4rem 0.8rem;
+    font-family: 'Courier New', monospace;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #111111;
+    background-color: #e8e8e8;
+    border: 2px solid #333333;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    min-width: 40px;
+    text-align: center;
+}
+
+.shortcuts-list span {
+    flex: 1;
+    margin-left: 1rem;
+    font-size: 1.1rem;
+}
