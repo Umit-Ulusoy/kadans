@@ -73,6 +73,17 @@
                 <button id="btnRecord" type="button">Kaydı Başlat</button>
                 <button id="btnStop" type="button" disabled>Kaydı Bitir</button>
             </div>
+
+            <!-- Kayıt Süresi Göstergesi -->
+            <div id="recordingTimeBar" class="recording-timebar" hidden aria-live="polite" aria-atomic="true">
+                <div class="timebar-header">
+                    <span class="timebar-label">Kayıt Süresi:</span>
+                    <span id="recordingTime" class="timebar-time" aria-label="Kayıt süresi">0:00</span>
+                </div>
+                <div class="timebar-progress-container" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Kayıt süresi göstergesi">
+                    <div id="recordingProgress" class="timebar-progress-fill"></div>
+                </div>
+            </div>
         </section>
 
         <section aria-label="Kayıt Listesi" class="app-section">
