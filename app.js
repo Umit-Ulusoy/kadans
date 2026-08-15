@@ -8,6 +8,9 @@ const btnShare = document.getElementById('btnShare');
 const audioPreview = document.getElementById('audioPreview');
 const shortcutsModal = document.getElementById('shortcutsModal');
 const btnCloseModal = document.getElementById('btnCloseModal');
+const recordingTimeBar = document.getElementById('recordingTimeBar');
+const recordingTimeDisplay = document.getElementById('recordingTime');
+const recordingProgressFill = document.getElementById('recordingProgress');
 
 let audioCtx = null;
 let isMetronomeRunning = false;
@@ -19,6 +22,10 @@ let mediaRecorder = null;
 let audioChunks = [];
 
 const recordedAudios = [];
+
+// Recording timer variables
+let recordingStartTime = 0;
+let recordingTimerInterval = null;
 
 function announceStatus(message) {
     statusRegion.textContent = '';
@@ -50,6 +57,52 @@ function initAudioContext() {
     if (audioCtx.state === 'suspended') {
         audioCtx.resume();
     }
+}
+
+/* ==========================================================================
+   RECORDING TIMER LOGIC
+   ========================================================================== */
+
+/**
+ * Formats seconds into MM:SS format
+ * @param {number} seconds - Total seconds to format
+ * @returns {string} Formatted time string
+ */
+function formatRecordingTime(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = Math.floor(seconds % 60);
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+}
+
+/**
+ * Starts the recording timer display
+ */
+function startRecordingTimer() {
+    recordingStartTime = Date.now();
+    recordingTimeBar.hidden = false;
+    recordingTimeDisplay.textContent = '0:00';
+    
+    recordingTimerInterval = setInterval(() => {
+        const elapsedSeconds = (Date.now() - recordingStartTime) / 1000;
+        const formattedTime = formatRecordingTime(elapsedSeconds);
+        recordingTimeDisplay.textContent = formattedTime;
+        
+        // Announce time every 30 seconds for screen reader users
+        if (Math.floor(elapsedSeconds) % 30 === 0 && Math.floor(elapsedSeconds) > 0) {
+            announceStatus(`Kayıt süresi: ${formattedTime}`);
+        }
+    }, 1000);
+}
+
+/**
+ * Stops and hides the recording timer
+ */
+function stopRecordingTimer() {
+    if (recordingTimerInterval) {
+        clearInterval(recordingTimerInterval);
+        recordingTimerInterval = null;
+    }
+    recordingTimeBar.hidden = true;
 }
 
 /* ==========================================================================
@@ -202,6 +255,9 @@ async function startRecordingProcess() {
 
         mediaRecorder.start();
         
+        // Start recording timer
+        startRecordingTimer();
+        
         if (!isMetronomeRunning) {
             startMetronome();
         }
@@ -220,6 +276,10 @@ function stopRecordingProcess() {
     if (mediaRecorder && mediaRecorder.state !== 'inactive') {
         mediaRecorder.stop();
     }
+    
+    // Stop recording timer
+    stopRecordingTimer();
+    
     if (isMetronomeRunning) {
         stopMetronome();
     }

@@ -8,6 +8,7 @@ The goal was simple: build a rock-solid, precise metronome and recorder that del
 * Microsecond-Precise Metronome: Built on the Web Audio API lookahead scheduling algorithm to maintain absolute timing accuracy, even during browser layout shifts or background tasks.
 * Distinct Downbeat Accents: High-pitch accent (1000Hz) on the first beat of each measure, paired with lower pitch clicks (800Hz) for sub-beats.
 * Optional 4-Beat Count-In: A hands-free preparation count-in before recording starts to ensure you catch the first downbeat smoothly.
+* Real-Time Recording Timer: Visual and accessible timebar displays elapsed recording time in MM:SS format with periodic announcements for screen reader users.
 * Screen Reader Centric Architecture:
 * Dynamic live region announcements for every state change (e.g., metronome start/stop, recording status, count-in playback).
 * Comprehensive ARIA attributes (aria-pressed, aria-live) managing interactive UI state.

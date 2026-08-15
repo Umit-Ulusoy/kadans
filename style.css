@@ -155,6 +155,72 @@ audio {
     font-weight: bold;
 }
 
+/* Recording Time Bar */
+.recording-timebar {
+    margin-top: 1.5rem;
+    padding: 1.25rem;
+    background-color: #ffffff;
+    border: 3px solid #004499;
+    border-radius: 8px;
+}
+
+.recording-timebar[hidden] {
+    display: none;
+}
+
+.timebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.timebar-label {
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: #111111;
+}
+
+.timebar-time {
+    font-size: 1.5rem;
+    font-weight: bold;
+    font-family: 'Courier New', monospace;
+    color: #d9381e;
+    min-width: 80px;
+    text-align: right;
+}
+
+.timebar-progress-container {
+    width: 100%;
+    height: 32px;
+    background-color: #e8e8e8;
+    border: 2px solid #333333;
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+}
+
+.timebar-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #004499 0%, #0066cc 50%, #004499 100%);
+    background-size: 200% 100%;
+    animation: progressPulse 2s ease-in-out infinite;
+    width: 100%;
+    transition: none;
+}
+
+@keyframes progressPulse {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
 /* Keyboard Shortcuts Modal */
 .modal {
     position: fixed;
