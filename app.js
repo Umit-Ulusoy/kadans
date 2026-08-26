@@ -82,6 +82,8 @@ function startRecordingTimer() {
     recordingTimeBar.hidden = false;
     recordingTimeDisplay.textContent = '0:00';
     
+    recordingTimeDisplay.setAttribute('aria-live', 'off');
+    
     recordingTimerInterval = setInterval(() => {
         const elapsedSeconds = (Date.now() - recordingStartTime) / 1000;
         const formattedTime = formatRecordingTime(elapsedSeconds);
