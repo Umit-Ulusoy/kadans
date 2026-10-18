@@ -1,6 +1,7 @@
 const statusRegion = document.getElementById('statusRegion');
 const bpmInput = document.getElementById('bpm');
 const chkCountIn = document.getElementById('chkCountIn');
+const chkMetronomeDuringRecording = document.getElementById('chkMetronomeDuringRecording');
 const btnMetronome = document.getElementById('btnMetronome');
 const btnRecord = document.getElementById('btnRecord');
 const btnStop = document.getElementById('btnStop');
@@ -258,13 +259,18 @@ async function startRecordingProcess() {
         // Start recording timer
         startRecordingTimer();
         
-        if (!isMetronomeRunning) {
+        if (chkMetronomeDuringRecording.checked && !isMetronomeRunning) {
             startMetronome();
         }
 
         btnRecord.disabled = true;
         btnStop.disabled = false;
-        announceStatus('Kayıt başladı. Metronom çalıyor.');
+        
+        if (chkMetronomeDuringRecording.checked) {
+            announceStatus('Kayıt başladı. Metronom çalıyor.');
+        } else {
+            announceStatus('Kayıt başladı.');
+        }
 
     } catch (err) {
         announceStatus('Mikrofon erişimi engellendi veya bir hata oluştu.');
@@ -280,7 +286,8 @@ function stopRecordingProcess() {
     // Stop recording timer
     stopRecordingTimer();
     
-    if (isMetronomeRunning) {
+    // Only stop metronome if it was started by recording process
+    if (isMetronomeRunning && chkMetronomeDuringRecording.checked) {
         stopMetronome();
     }
     btnRecord.disabled = false;
