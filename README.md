@@ -17,15 +17,64 @@ The goal was simple: build a rock-solid, precise metronome and recorder that del
 ## Built With
 * HTML5 (Semantic Structure)
 * CSS3 (Accessible & Responsive Styling)
-* Vanilla JavaScript (ES6+)
+* Vanilla JavaScript ES6+ Modules
 * Web Audio API (Audio Synthesis & Precise Scheduling)
 * MediaRecorder API (Microphone Capture)
 * Web Share API (Native File Export)
+
+## Project Structure
+```
+kadans/
+├── index.html              # Main HTML file
+├── style.css               # Styles
+├── manifest.json           # PWA manifest
+├── sw.js                   # Service worker
+│
+└── js/                     # JavaScript modules
+    ├── app.js              # Application orchestrator
+    ├── config.js           # Configuration constants
+    │
+    ├── core/               # Core functionality
+    │   ├── audio-context.js   # AudioContext management
+    │   ├── metronome.js       # Metronome logic
+    │   └── recorder.js        # Recording logic
+    │
+    ├── ui/                 # UI components
+    │   ├── announcer.js       # Accessibility announcements
+    │   ├── audio-list.js      # Recording list manager
+    │   └── keyboard.js        # Keyboard shortcuts
+    │
+    └── utils/              # Utilities
+        └── helpers.js         # Helper functions
+```
 ## Getting Started
-No build steps, node modules, or complex setup required.
+
+### Requirements
+- Modern web browser with ES6 module support
+- Local web server (for development)
+
+### Installation
 1. Clone the repository:
+```bash
 git clone https://github.com/umit-ulusoy/kadans.git
-2. Open index.html in any modern web browser.
+cd kadans
+```
+
+2. Start a local web server:
+```bash
+# Using Python 3
+python -m http.server 8000
+
+# Using Node.js (if you have http-server installed)
+npx http-server
+
+# Using PHP
+php -S localhost:8000
+```
+
+3. Open http://localhost:8000 in your browser
+
+**Note:** ES6 modules require a local server and won't work with `file://` protocol.
 ## How to Use
 1. Metronome: Set your desired BPM and toggle the metronome on or off.
 2. Recording: Check "Count-In" if you want a 4-beat intro, then click "Start Recording". The metronome will start automatically alongside your recording session.
