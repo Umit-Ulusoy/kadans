@@ -22,6 +22,7 @@ export class Recorder {
         this.btnStop = document.getElementById('btnStop');
         this.chkCountIn = document.getElementById('chkCountIn');
         this.chkMetronomeDuringRecording = document.getElementById('chkMetronomeDuringRecording');
+        this.chkPlaybackDuringRecording = document.getElementById('chkPlaybackDuringRecording');
         this.recordingTimeBar = document.getElementById('recordingTimeBar');
         this.recordingTimeDisplay = document.getElementById('recordingTime');
         
@@ -118,6 +119,13 @@ export class Recorder {
             if (this.chkMetronomeDuringRecording.checked && !this.metronome.isRunning) {
                 this.metronome.start();
             }
+            
+            // Play existing recordings if enabled
+            if (this.chkPlaybackDuringRecording && this.chkPlaybackDuringRecording.checked) {
+                if (this.audioList.mixer.getTrackCount() > 0) {
+                    this.audioList.mixer.playAll();
+                }
+            }
 
             this.btnRecord.disabled = true;
             this.btnStop.disabled = false;
@@ -144,6 +152,11 @@ export class Recorder {
         
         // Stop recording timer
         this.stopRecordingTimer();
+        
+        // Stop playback if it was started
+        if (this.audioList.mixer.isPlaying) {
+            this.audioList.mixer.stopAll();
+        }
         
         // Only stop metronome if it was started by recording process
         if (this.metronome.isRunning && this.chkMetronomeDuringRecording.checked) {

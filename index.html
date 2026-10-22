@@ -63,6 +63,11 @@
                 <input type="checkbox" id="chkMetronomeDuringRecording" checked>
                 <label for="chkMetronomeDuringRecording">Kayıt sırasında metronom çalsın</label>
             </div>
+            
+            <div class="form-group checkbox-group">
+                <input type="checkbox" id="chkPlaybackDuringRecording">
+                <label for="chkPlaybackDuringRecording">Kayıt sırasında mevcut kayıtları çal (overdub)</label>
+            </div>
 
             <div class="button-group">
                 <button id="btnMetronome" type="button" aria-pressed="false">
@@ -92,7 +97,23 @@
         </section>
 
         <section aria-label="Kayıt Listesi" class="app-section">
-            <h2>Kayıtlar</h2>
+            <div class="section-header">
+                <h2>Kayıtlar</h2>
+                
+                <!-- Playback Controls (hidden by default, shown when 2+ recordings) -->
+                <div id="playbackControls" class="playback-controls" hidden>
+                    <div class="button-group">
+                        <button type="button" id="btnPlayAll" aria-label="Tüm kayıtları oynat">
+                            Oynat
+                        </button>
+                        <button type="button" id="btnStopAll" aria-label="Tüm kayıtları durdur">
+                            Durdur
+                        </button>
+                    </div>
+                    <p class="help-text">Tüm kayıtlar aynı anda çalar</p>
+                </div>
+            </div>
+            
             <div id="audioListContainer" role="region" aria-label="Kayıtlar Listesi" class="audio-list-wrapper">
                 <p>Kayıt yok</p>
             </div>
@@ -102,8 +123,14 @@
             <h2>Kaydı Paylaş ve Gönder</h2>
 
             <div class="button-group">
-                <button id="btnShare" type="button" disabled>Dosyayı Paylaş</button>
+                <button id="btnShare" type="button" disabled>Paylaş</button>
+                <button id="btnDownload" type="button" disabled>İndir</button>
             </div>
+            
+            <p class="help-text" id="exportInfo">
+                Tek kayıt: Doğrudan paylaşılır/indirilir.<br>
+                2+ kayıt: Tüm kayıtlar birleştirilerek tek dosya olarak paylaşılır/indirilir.
+            </p>
         </section>
 
     </main>
